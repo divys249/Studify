@@ -1,4 +1,10 @@
 node_modules/
 dist/
 build/
+frontend/node_modules/
+frontend/dist/
+frontend/build/
+frontend/guidelines/
+copilotrules/
 .env
+

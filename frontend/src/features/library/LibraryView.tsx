@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Grid, List, SlidersHorizontal } from 'lucide-react';
-import { SearchInput } from './Input';
-import { Chip } from './Chip';
-import { Button } from './Button';
-import { ResourceCard, Resource } from './ResourceCard';
+import { SearchInput } from '../../components/form-controls/Input';
+import { Chip } from '../../components/form-controls/Chip';
+import { Button } from '../../components/form-controls/Button';
+import { ResourceCard, Resource } from '../../components/data-display/ResourceCard';
 
 interface LibraryViewProps {
   onAnalyze: (id: string) => void;

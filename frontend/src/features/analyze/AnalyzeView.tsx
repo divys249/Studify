@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { UploadZone } from './ResourceCard';
-import { AnalysisModal } from './AnalysisModal';
-import { Card } from './Card';
+import { UploadZone } from '../../components/data-display/ResourceCard';
+import { AnalysisModal } from './components/AnalysisModal';
+import { Card } from '../../components/data-display/Card';
 import { FileText, CheckCircle2 } from 'lucide-react';
-import { useToast, Toast } from './Toast';
+import { useToast, Toast } from '../../components/feedback/Toast';
 
 export function AnalyzeView() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);

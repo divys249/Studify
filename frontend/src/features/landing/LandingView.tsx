@@ -1,7 +1,7 @@
 import React from 'react';
 import { Upload, BarChart3, Calendar, Sparkles } from 'lucide-react';
-import { Button } from './Button';
-import { Card } from './Card';
+import { Button } from '../../components/form-controls/Button';
+import { Card } from '../../components/data-display/Card';
 
 interface LandingViewProps {
   onGetStarted: () => void;

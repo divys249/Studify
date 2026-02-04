@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, Download } from 'lucide-react';
-import { Button } from './Button';
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { StudySession } from './StudySession';
+import { Button } from '../../components/form-controls/Button';
+import { Card } from '../../components/data-display/Card';
+import { Badge } from '../../components/data-display/Badge';
+import { StudySession } from './components/StudySession';
 
 export function CalendarView() {
   const [currentDate, setCurrentDate] = useState(new Date());

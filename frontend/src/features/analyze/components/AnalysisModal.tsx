@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Modal } from './Modal';
-import { CircularProgress } from './ProgressBar';
-import { Button } from './Button';
-import { Badge } from './Badge';
+import { Modal } from '../../../components/layout/Modal';
+import { CircularProgress } from '../../../components/feedback/ProgressBar';
+import { Button } from '../../../components/form-controls/Button';
+import { Badge } from '../../../components/data-display/Badge';
 import { Clock, BookOpen, TrendingUp, CheckCircle2 } from 'lucide-react';
 
 interface AnalysisResult {
