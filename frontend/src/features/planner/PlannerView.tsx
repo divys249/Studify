@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Button } from './Button';
-import { Input } from './Input';
-import { Card } from './Card';
-import { StudySessionCard, WeeklyGrid, StudySession } from './StudySession';
-import { Modal } from './Modal';
+import { Button } from '../../components/form-controls/Button';
+import { Input } from '../../components/form-controls/Input';
+import { Card } from '../../components/data-display/Card';
+import { StudySessionCard, WeeklyGrid, StudySession } from './components/StudySession';
+import { Modal } from '../../components/layout/Modal';
 import { Sparkles, Calendar as CalendarIcon, Edit3 } from 'lucide-react';
-import { Badge } from './Badge';
+import { Badge } from '../../components/data-display/Badge';
 
 export function PlannerView() {
   const [showGenerateForm, setShowGenerateForm] = useState(false);

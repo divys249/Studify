@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { LoginPage } from './components/LoginPage';
-import { HomePage } from './components/HomePage';
-import { LandingView } from './components/LandingView';
-import { DashboardView } from './components/DashboardView';
-import { LibraryView } from './components/LibraryView';
-import { AnalyzeView } from './components/AnalyzeView';
-import { PlannerView } from './components/PlannerView';
-import { CalendarView } from './components/CalendarView';
-import { SettingsView } from './components/SettingsView';
-import { Sidebar, MobileNav } from './components/Sidebar';
-import { AnalysisModal } from './components/AnalysisModal';
-import { Toast, useToast } from './components/Toast';
+import { LoginPage } from '../features/auth/LoginPage';
+import { HomePage } from '../features/home/HomePage';
+import { LandingView } from '../features/landing/LandingView';
+import { DashboardView } from '../features/dashboard/DashboardView';
+import { LibraryView } from '../features/library/LibraryView';
+import { AnalyzeView } from '../features/analyze/AnalyzeView';
+import { PlannerView } from '../features/planner/PlannerView';
+import { CalendarView } from '../features/planner/CalendarView';
+import { SettingsView } from '../features/settings/SettingsView';
+import { Sidebar, MobileNav } from '../components/layout/Sidebar';
+import { AnalysisModal } from '../features/analyze/components/AnalysisModal';
+import { Toast, useToast } from '../components/feedback/Toast';
 
 export default function App() {
   const [appMode, setAppMode] = useState<'dark' | 'light'>('dark'); // Start with dark mode

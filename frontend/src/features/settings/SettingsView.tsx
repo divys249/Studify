@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { User, Bell, Palette, Clock, Shield } from 'lucide-react';
-import { Card } from './Card';
-import { Input } from './Input';
-import { Button } from './Button';
-import { Badge } from './Badge';
+import { Card } from '../../components/data-display/Card';
+import { Input } from '../../components/form-controls/Input';
+import { Button } from '../../components/form-controls/Button';
+import { Badge } from '../../components/data-display/Badge';
 
 export function SettingsView() {
   const [settings, setSettings] = useState({

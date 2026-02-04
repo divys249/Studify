@@ -2,7 +2,7 @@ import React from 'react';
 import { FileText, Video, Presentation, Clock, Upload, BarChart3 } from 'lucide-react';
 import { Card } from './Card';
 import { Badge, DifficultyBadge } from './Badge';
-import { Button } from './Button';
+import { Button } from '../form-controls/Button';
 
 export interface Resource {
   id: string;

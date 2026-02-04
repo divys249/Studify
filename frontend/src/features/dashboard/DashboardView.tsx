@@ -1,8 +1,8 @@
 import React from 'react';
 import { Clock, BookOpen, TrendingUp, Bell } from 'lucide-react';
-import { StatsCard, Card } from './Card';
-import { StudySessionCard, StudySession } from './StudySession';
-import { Badge } from './Badge';
+import { StatsCard, Card } from '../../components/data-display/Card';
+import { StudySessionCard, StudySession } from '../planner/components/StudySession';
+import { Badge } from '../../components/data-display/Badge';
 
 interface DashboardViewProps {
   onNavigate: (view: string) => void;
