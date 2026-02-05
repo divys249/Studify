@@ -11,25 +11,22 @@ import { SettingsView } from '../features/settings/SettingsView';
 import { Sidebar, MobileNav } from '../components/layout/Sidebar';
 import { AnalysisModal } from '../features/analyze/components/AnalysisModal';
 import { Toast, useToast } from '../components/feedback/Toast';
+import { getAllUploadedFiles } from '../services/fileUploadService';
 
 export default function App() {
-  const [appMode, setAppMode] = useState<'dark' | 'light'>('dark'); // Start with dark mode
+  const [appMode, setAppMode] = useState<'dark' | 'light'>('light'); // Light = proper routing structure
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isTransitioning, setIsTransitioning] = useState(false);
   
-  // Light theme states (legacy)
-  const [isSignedIn, setIsSignedIn] = useState(false);
-  const [activeView, setActiveView] = useState<string>('dashboard');
+  // Light theme states (Sprint 1 features accessible here)
+  const [isSignedIn, setIsSignedIn] = useState(false); // Start with login
+  const [activeView, setActiveView] = useState<string>('library'); // Start at library to see Sprint 1 features
   const [analyzingResourceId, setAnalyzingResourceId] = useState<string | null>(null);
   const { toast, showToast, hideToast } = useToast();
 
   useEffect(() => {
-    // Apply theme class to body
-    if (appMode === 'light') {
-      document.body.classList.add('light-theme');
-    } else {
-      document.body.classList.remove('light-theme');
-    }
+    // Always use dark theme - remove light theme class
+    document.body.classList.remove('light-theme');
   }, [appMode]);
 
   const handleLogin = () => {
@@ -51,7 +48,7 @@ export default function App() {
   // Legacy light theme handlers
   const handleGetStarted = () => {
     setIsSignedIn(true);
-    setActiveView('analyze');
+    setActiveView('library'); // Go directly to library after sign in
   };
 
   const handleViewChange = (view: string) => {
@@ -71,20 +68,10 @@ export default function App() {
     setAnalyzingResourceId(null);
   };
 
-  // Dark theme app (new login/home)
-  if (appMode === 'dark') {
-    return (
-      <div className={`transition-opacity duration-500 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
-        {!isLoggedIn ? (
-          <LoginPage onLogin={handleLogin} />
-        ) : (
-          <HomePage onLogout={handleLogout} />
-        )}
-      </div>
-    );
-  }
-
-  // Light theme app (legacy STUDIFY)
+  // Use the light mode structure (proper routing) but with dark theme styling
+  // This gives us access to Sprint 1 features with dark UI
+  
+  // Show landing page with sign in
   if (!isSignedIn) {
     return <LandingView onGetStarted={handleGetStarted} />;
   }
@@ -119,6 +106,11 @@ export default function App() {
         onClose={() => setAnalyzingResourceId(null)}
         fileName={`Resource ${analyzingResourceId}`}
         onComplete={handleAnalysisComplete}
+        fileMetadata={analyzingResourceId ? (() => {
+          const uploadedFiles = getAllUploadedFiles();
+          const file = uploadedFiles.find(f => f.id === analyzingResourceId);
+          return file?.metadata;
+        })() : undefined}
       />
 
       {/* Toast Notifications */}

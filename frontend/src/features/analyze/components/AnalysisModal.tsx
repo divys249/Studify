@@ -19,9 +19,10 @@ interface AnalysisModalProps {
   onClose: () => void;
   fileName: string;
   onComplete: (result: AnalysisResult) => void;
+  fileMetadata?: { pages?: number; estimatedTime?: string; difficulty?: 'easy' | 'medium' | 'hard' };
 }
 
-export function AnalysisModal({ isOpen, onClose, fileName, onComplete }: AnalysisModalProps) {
+export function AnalysisModal({ isOpen, onClose, fileName, onComplete, fileMetadata }: AnalysisModalProps) {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState('Uploading file...');
   const [isComplete, setIsComplete] = useState(false);
@@ -60,12 +61,16 @@ export function AnalysisModal({ isOpen, onClose, fileName, onComplete }: Analysi
         stepIndex++;
       }
 
-      // Generate mock result
+      // Use actual file metadata if available, otherwise use reasonable defaults
+      const pages = fileMetadata?.pages || 20;
+      const estimatedTimeStr = fileMetadata?.estimatedTime || '3h';
+      const hours = parseFloat(estimatedTimeStr.replace(/[hm]/g, '')) || 3;
+      
       const mockResult: AnalysisResult = {
-        totalPages: Math.floor(Math.random() * 50) + 20,
-        contentDensity: Math.floor(Math.random() * 40) + 60,
-        estimatedHours: Math.floor(Math.random() * 5) + 3,
-        difficulty: ['easy', 'medium', 'hard'][Math.floor(Math.random() * 3)] as any,
+        totalPages: pages,
+        contentDensity: Math.min(Math.floor((pages / 50) * 100) + 50, 100),
+        estimatedHours: Math.ceil(hours),
+        difficulty: fileMetadata?.difficulty || 'medium',
         recommendedSessions: [
           { duration: 90, type: 'Deep focus' },
           { duration: 60, type: 'Review' },
