@@ -46,24 +46,7 @@ export function ResourceCard({ resource, onAnalyze, onAddToPlan }: ResourceCardP
             <h3 className="font-semibold text-[var(--color-text-primary)] truncate">
               {resource.title}
             </h3>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <button
-                onClick={() => console.log('Upload clicked for:', resource.title)}
-                className="group relative px-2 py-1 text-xs font-medium rounded-md
-                  bg-transparent hover:bg-[var(--color-primary-violet)]/10
-                  border border-white/20 hover:border-[var(--color-primary-violet)]/40
-                  text-[var(--color-text-muted)] hover:text-[var(--color-primary-violet)]
-                  transition-all duration-300 active:scale-95
-                  hover:shadow-[0_0_20px_rgba(155,124,255,0.3)]"
-                aria-label="Upload materials"
-              >
-                <span className="flex items-center gap-1">
-                  <Upload size={12} />
-                  <span>Upload</span>
-                </span>
-              </button>
-              <DifficultyBadge level={resource.difficulty} />
-            </div>
+            <DifficultyBadge level={resource.difficulty} />
           </div>
 
           <div className="flex items-center gap-3 mb-3 text-sm text-[var(--color-text-muted)]">

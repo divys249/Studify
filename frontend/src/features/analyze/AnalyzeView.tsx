@@ -1,19 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { UploadZone } from '../../components/data-display/ResourceCard';
 import { AnalysisModal } from './components/AnalysisModal';
 import { Card } from '../../components/data-display/Card';
 import { FileText, CheckCircle2 } from 'lucide-react';
 import { useToast, Toast } from '../../components/feedback/Toast';
+import { getAllSubjects } from '../../services/subjectService';
+import { uploadFile, UploadProgress } from '../../services/fileUploadService';
+import { Subject } from '../../types';
+import { Button } from '../../components/form-controls/Button';
 
 export function AnalyzeView() {
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const [analyzingFile, setAnalyzingFile] = useState<string | null>(null);
+  const [subjects, setSubjects] = useState<Subject[]>([]);
+  const [selectedSubjectId, setSelectedSubjectId] = useState<string>('');
+  const [uploadProgress, setUploadProgress] = useState<Map<string, UploadProgress>>(new Map());
   const { toast, showToast, hideToast } = useToast();
 
-  const handleUpload = (files: FileList) => {
+  useEffect(() => {
+    const loadedSubjects = getAllSubjects();
+    setSubjects(loadedSubjects);
+    if (loadedSubjects.length > 0) {
+      setSelectedSubjectId(loadedSubjects[0].id);
+    }
+  }, []);
+
+  const handleUpload = async (files: FileList) => {
+    if (!selectedSubjectId) {
+      showToast('Please select a subject first', 'error');
+      return;
+    }
+
     const newFiles = Array.from(files);
     setUploadedFiles(prev => [...prev, ...newFiles]);
-    showToast(`${newFiles.length} file(s) uploaded successfully`, 'success');
+
+    // Upload files to storage
+    for (const file of newFiles) {
+      try {
+        await uploadFile(file, selectedSubjectId, (progress) => {
+          setUploadProgress(prev => new Map(prev.set(progress.fileId, progress)));
+        });
+        showToast(`${file.name} uploaded successfully`, 'success');
+      } catch (error: any) {
+        showToast(error.message || 'Upload failed', 'error');
+      }
+    }
     
     // Auto-analyze first file
     if (newFiles.length > 0) {
@@ -39,6 +70,52 @@ export function AnalyzeView() {
           Upload your study materials to get AI-powered insights and time estimates
         </p>
       </div>
+
+      {/* Subject Selection */}
+      {subjects.length > 0 && (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: '50ms' }}>
+          <Card variant="compact">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <label className="text-sm font-medium text-[var(--color-text-primary)]">
+                Select Subject:
+              </label>
+              <div className="flex flex-wrap gap-2">
+                {subjects.map(subject => (
+                  <button
+                    key={subject.id}
+                    onClick={() => setSelectedSubjectId(subject.id)}
+                    className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                      selectedSubjectId === subject.id
+                        ? 'text-white shadow-lg'
+                        : 'bg-white/5 text-[var(--color-text-muted)] hover:bg-white/10'
+                    }`}
+                    style={{
+                      backgroundColor: selectedSubjectId === subject.id ? subject.color : undefined,
+                    }}
+                  >
+                    {subject.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </Card>
+        </div>
+      )}
+
+      {subjects.length === 0 && (
+        <div className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: '50ms' }}>
+          <Card variant="compact">
+            <div className="text-center py-6">
+              <p className="text-[var(--color-text-muted)] mb-4">
+                No subjects found. Create subjects first in the Library.
+              </p>
+              <Button onClick={() => window.location.hash = '#library'}>
+                Go to Library
+              </Button>
+            </div>
+          </Card>
+        </div>
+      )}
 
       {/* Upload Zone */}
       <div className="animate-in fade-in slide-in-from-bottom-4 duration-500" style={{ animationDelay: '100ms' }}>

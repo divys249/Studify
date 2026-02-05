@@ -45,13 +45,13 @@ export function Modal({
   const sizes = {
     sm: 'max-w-md',
     md: 'max-w-lg',
-    lg: 'max-w-2xl',
+    lg: 'max-w-3xl',
     xl: 'max-w-4xl'
   };
 
   return (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-200"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200 overflow-y-auto"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -59,7 +59,8 @@ export function Modal({
     >
       <div 
         className={`
-          w-full ${sizes[size]} glass-card rounded-[var(--radius-lg)] p-6
+          w-full ${sizes[size]} glass-card rounded-[var(--radius-lg)] p-6 my-8
+          max-h-[90vh] overflow-y-auto
           animate-in zoom-in-95 duration-200
         `}
         onClick={(e) => e.stopPropagation()}

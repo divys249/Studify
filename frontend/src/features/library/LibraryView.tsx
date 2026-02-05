@@ -1,9 +1,13 @@
-import React, { useState } from 'react';
-import { Grid, List, SlidersHorizontal } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Grid, List, SlidersHorizontal, BookOpen, Plus } from 'lucide-react';
 import { SearchInput } from '../../components/form-controls/Input';
 import { Chip } from '../../components/form-controls/Chip';
 import { Button } from '../../components/form-controls/Button';
 import { ResourceCard, Resource } from '../../components/data-display/ResourceCard';
+import { SubjectManagement } from './SubjectManagement';
+import { getAllSubjects } from '../../services/subjectService';
+import { getAllUploadedFiles } from '../../services/fileUploadService';
+import { Subject } from '../../types';
 
 interface LibraryViewProps {
   onAnalyze: (id: string) => void;
@@ -14,17 +18,40 @@ export function LibraryView({ onAnalyze, onAddToPlan }: LibraryViewProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [activeTab, setActiveTab] = useState<'materials' | 'subjects'>('materials');
+  const [subjects, setSubjects] = useState<Subject[]>([]);
 
-  const allTags = [
-    'Computer Science',
-    'Mathematics',
-    'Physics',
-    'Database',
-    'Algorithms',
-    'Networks'
-  ];
+  useEffect(() => {
+    loadSubjects();
+  }, []);
+
+  const loadSubjects = () => {
+    const loadedSubjects = getAllSubjects();
+    setSubjects(loadedSubjects);
+  };
+
+  const allTags = subjects.map(s => s.name);
+
+  // Convert uploaded files to resources
+  const uploadedResources: Resource[] = getAllUploadedFiles().map(file => {
+    const subject = subjects.find(s => s.id === file.subjectId);
+    return {
+      id: file.id,
+      title: file.fileName,
+      type: file.fileType,
+      subject: subject?.name || 'Unknown',
+      subjectId: file.subjectId,
+      estimatedTime: file.metadata?.estimatedTime || '0m',
+      difficulty: file.metadata?.difficulty,
+      pages: file.metadata?.pages,
+      progress: 0,
+      uploadedFileId: file.id,
+    };
+  });
 
   const resources: Resource[] = [
+    ...uploadedResources,
+    // Mock data for demonstration
     {
       id: '1',
       title: 'Introduction to Data Structures',
@@ -102,18 +129,63 @@ export function LibraryView({ onAnalyze, onAddToPlan }: LibraryViewProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
+      {/* Header with Tabs */}
       <div className="animate-in fade-in slide-in-from-top-4 duration-500">
-        <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-2">
-          Materials Library
-        </h1>
-        <p className="text-[var(--color-text-muted)]">
-          Manage and organize your study resources
-        </p>
+        <div className="flex justify-between items-start mb-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-[var(--color-text-primary)] mb-2">
+              Library
+            </h1>
+            <p className="text-[var(--color-text-muted)]">
+              Manage subjects and study materials
+            </p>
+          </div>
+        </div>
+
+        {/* Tab Navigation */}
+        <div className="flex gap-2 border-b border-white/10">
+          <button
+            onClick={() => setActiveTab('materials')}
+            className={`px-4 py-2 font-medium transition-all relative ${
+              activeTab === 'materials'
+                ? 'text-[var(--color-primary-violet)]'
+                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+            }`}
+          >
+            Materials
+            {activeTab === 'materials' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-primary-violet)]" />
+            )}
+          </button>
+          <button
+            onClick={() => setActiveTab('subjects')}
+            className={`px-4 py-2 font-medium transition-all relative ${
+              activeTab === 'subjects'
+                ? 'text-[var(--color-primary-violet)]'
+                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+            }`}
+          >
+            <span className="flex items-center gap-2">
+              <BookOpen size={16} />
+              Subjects
+            </span>
+            {activeTab === 'subjects' && (
+              <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[var(--color-primary-violet)]" />
+            )}
+          </button>
+        </div>
       </div>
 
-      {/* Search and Filters */}
-      <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500" style={{ animationDelay: '100ms' }}>
+      {/* Subject Management Tab */}
+      {activeTab === 'subjects' && (
+        <SubjectManagement />
+      )}
+
+      {/* Materials Tab */}
+      {activeTab === 'materials' && (
+        <>
+          {/* Search and Filters */}
+          <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500" style={{ animationDelay: '100ms' }}>
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <SearchInput
@@ -211,6 +283,8 @@ export function LibraryView({ onAnalyze, onAddToPlan }: LibraryViewProps) {
           </div>
         )}
       </div>
+        </>
+      )}
     </div>
   );
 }
